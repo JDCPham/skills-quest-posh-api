@@ -1,0 +1,64 @@
+app: posh-api
+service: posh
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: vietpro
+  stage: dev
+  region: eu-west-1
+  memorySize: 1024
+  timeout: 30
+functions:
+  get-posh-listings:
+    handler: handlers/listings.get
+    events:
+      - http:
+          path: /posh
+          method: GET
+          cors: true
+  get-posh-listing:
+    handler: handlers/listing.get
+    events:
+      - http:
+          path: /posh/{id}
+          method: GET
+          cors: true
+  delete-posh-listing:
+    handler: handlers/listing.delete
+    events:
+      - http:
+          path: /posh/{id}
+          method: DELETE
+          cors: true
+  add-posh-listing:
+    handler: handlers/listing.post
+    events:
+      - http:
+          path: /posh
+          method: POST
+          cors: true 
+  star-posh-listing:
+    handler: handlers/star.patch
+    events:
+      - http:
+          path: /posh/star/{id}
+          method: PATCH
+          cors: true
+  unstar-posh-listing:
+    handler: handlers/star.delete
+    events:
+      - http:
+          path: /posh/star/{id}
+          method: DELETE 
+          cors: true
+package:
+  exclude:
+    - "**"
+  include:
+    - "./handlers/**"
+    - "./utils/**"
+plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
+  - serverless-offline
