@@ -9,20 +9,17 @@ const pool = mysql.createPool({
 })
 
 module.exports.get = (event, context, callback) => {
-    try {
-        const id = event.pathParameters.id;
-        const SQL = `SELECT * FROM item WHERE id='${id}'`;
-        pool.query(SQL, (error, results) => {
-            if (error) return callback(error);
-            callback(null, response(200, results));
-        });
-    } catch (e) {
-        callback(e)
-    }
-   
+    context.callbackWaitsForEmptyEventLoop = false;
+    const id = event.pathParameters.id;
+    const SQL = `SELECT * FROM item WHERE id='${id}'`;
+    pool.query(SQL, (error, results) => {
+        if (error) return callback(error);
+        callback(null, response(200, results));
+    });
 };
 
 module.exports.post = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     const body = JSON.parse(event.body);
     const item = {
         title: body.title,
@@ -41,6 +38,7 @@ module.exports.post = (event, context, callback) => {
 }
 
 module.exports.delete = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     const id = event.pathParameters.id;
     const SQL = `DELETE FROM item WHERE id=?`;
     pool.query(SQL, [id], (error, results) => {

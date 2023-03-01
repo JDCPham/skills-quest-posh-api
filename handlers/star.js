@@ -9,6 +9,7 @@ const pool = mysql.createPool({
 })
 
 module.exports.patch = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     const id = event.pathParameters.id;
     const SQL = `UPDATE item SET starred=? WHERE id=?`;
     pool.query(SQL, [true, id], (error, results) => {
@@ -20,6 +21,7 @@ module.exports.patch = (event, context, callback) => {
 }
 
 module.exports.delete = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     const id = event.pathParameters.id;
     const SQL = `UPDATE item SET starred=? WHERE id=?`;
     pool.query(SQL, [false, id], (error, results) => {

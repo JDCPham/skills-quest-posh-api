@@ -9,9 +9,11 @@ const pool = mysql.createPool({
 })
 
 module.exports.get = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     const SQL = 'SELECT * FROM item';
     pool.query(SQL, (error, results) => {
-        if (error) return callback(error);
+        if (error) callback(error);
         callback(null, response(200, results));
     });
 };
